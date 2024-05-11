@@ -30,8 +30,18 @@ class Record:
         self.phones = [phone for phone in self.phones if phone.value != phone_number]
 
     def edit_phone(self, old_phone_number, new_phone_number):
-        self.remove_phone(old_phone_number)
-        self.add_phone(new_phone_number)
+        old_phone = self.find_phone(old_phone_number)
+        if not old_phone:
+            raise ValueError(f"Phone number '{old_phone_number}' not found.")
+        
+        try:
+        # Якщо номер не валідний, конструктор Phone кине ValueError
+            new_phone = Phone(new_phone_number)
+        except ValueError as e:
+            raise ValueError(f"New phone number is invalid: {e}")
+         # Замінюємо старий номер на новий
+        old_phone.value = new_phone.value
+    
 
     def find_phone(self, phone_number):
         for phone in self.phones:
@@ -75,7 +85,7 @@ for name, record in book.data.items():
 
 # Знаходження та редагування телефону для John
 john = book.find("John")
-john.edit_phone("1234567890", "1112223333")
+john.edit_phone("1234567890", "5555555555")
 
 print(john)  # Виведення: Contact name: John, phones: 1112223333; 5555555555
 
